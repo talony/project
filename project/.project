@@ -1,17 +1,320 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<projectDescription>
-	<name>project</name>
-	<comment></comment>
-	<projects>
-	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-	</natures>
-</projectDescription>
+package asd;
+import javafx.application.Application;
+import java.util.Stack;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+public class asd1 extends Application {
+	TextArea textarea=new TextArea();
+	Stack<Double>number= new Stack<>();
+	Stack<String>operator=new Stack<>();
+	Stack<String>operat=new Stack<>();
+	Stack<Double>num=new Stack<>();
+	 static String []te;
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
+   @Override
+	public void start(Stage arg0) throws Exception {
+		// TODO Auto-generated method stub
+		//button
+		Button []bt=new Button[9];
+		for(int i=1;i<=bt.length;i++)
+		{
+			bt[i-1]=new Button(Integer.toString( i ));
+			bt[i-1].setOnAction(e->number(e));
+			bt[i-1].setPrefSize(45, 35);
+		}
+		int x=0;
+		int y=0;
+		//pane
+		VBox vbox=new VBox(10);
+		HBox []hbox=new HBox[3];
+		VBox pane =new VBox(5);
+		textarea.setPrefColumnCount(15);
+		textarea.setPrefHeight(50);
+		for(int i=1;i<=3;i++)
+		{
+			hbox[x]=new HBox(5);
+			for(int j=1;j<=3;j++)
+			{
+				hbox[x].getChildren().add(bt[y]);
+				y++;
+			}
+			
+			vbox.getChildren().add(hbox[x]);
+			x++;
+		}
+		String [] operation1={"*","+/-","+"};
+		String [] operation2={"%","^","-"};
+		String [] operation3={"0",".","v","="};
+		String [] operation4={"c","AC"};
+		Button []bt1=new Button[3];
+		Button []bt2=new Button[3];
+		Button []bt3=new Button[4];
+		VBox vbox1=new VBox(8);
+		VBox vbox2=new VBox(8);
+		HBox hbox1=new HBox(5);
+		HBox hbox2=new HBox(5);
+		for(int i=0;i<3;i++)
+		{
+			bt1[i]=new Button(operation1[i]);
+			vbox1.getChildren().add(bt1[i]);
+			bt1[i].setPrefSize(45, 35);
+			bt1[i].setOnAction(e->operation1(e));
+			bt1[i].setStyle("-fx-background-color:#1f1f1f;-fx-text-fill:white");
+		}
+		
+		for(int i=0;i<3;i++)
+		{
+			bt2[i]=new Button(operation2[i]);
+			vbox2.getChildren().add(bt2[i]);
+			bt2[i].setPrefSize(45,35);
+			bt2[i].setOnAction(e->operation2(e));
+			bt2[i].setStyle("-fx-background-color:#1f1f1f;-fx-text-fill:white");
+		}
+		for(int i=0;i<4;i++)
+		{
+			bt3[i]=new Button(operation3[i]);
+			hbox2.getChildren().add(bt3[i]);
+			
+			bt3[i].setPrefSize(45, 35);
+			bt3[i].setOnAction(e->operation3(e));
+		}
+		bt3[2].setStyle("-fx-background-color:#1f1f1f;-fx-text-fill:white");
+		bt3[3].setStyle("-fx-background-color:green;-fx-text-fill:white");
+		HBox h3=new HBox(5);
+		for(int i=0;i<2;i++)
+		{
+			bt1[i]=new Button(operation4[i]);
+			h3.getChildren().add(bt1[i]);
+			bt1[i].setPrefSize(100, 30);
+			bt1[i].setStyle("-fx-background-color:red;-fx-text-fill:white");
+			bt1[i].setOnAction(e->operation4(e));
+		}
+		HBox hh=new HBox(5);
+		
+	bt3[3].setPrefWidth(80);
+		hbox1.getChildren().addAll(vbox1,vbox2);
+		hh.getChildren().addAll(vbox,hbox1);
+		pane.getChildren().addAll(textarea,h3,hh,hbox2);
+		h3.setAlignment(Pos.CENTER_LEFT);
+		pane.setStyle("-fx-background-color:gray");
+		pane.setPadding(new Insets(22, 12, 13, 14));
+		Scene sc= new Scene(pane,230,280);
+		arg0.setScene(sc);
+		arg0.setTitle("calculator");
+		arg0.show();
+	}
+
+	
+private Object operation4(ActionEvent e) {
+	// TODO Auto-generated method stub
+	Button btn= (Button)e.getSource();
+	switch (btn.getText())
+	{
+	case "AC":
+		textarea.setText("");
+		operator.clear();
+		number.clear();
+		num.clear();
+		break;
+	case "c":
+		try{
+		textarea.setText(textarea.getText().substring(0, textarea.getText().length()-1));
+		}
+		catch (Exception e2) {
+			textarea.setText(" ");
+		}
+		
+	
+	}
+	return null;
+}
+private void result() {
+		// TODO Auto-generated method stub
+	String tt=	textarea.getText();
+	textarea.setStyle("-fx-font-size: 15");
+	te=tt.split(" ");
+	double y;
+	double popv;
+	for(int i=0;i<te.length;i++)
+	{
+		switch (te[i]) {
+		case "+":
+			operator.push("+");
+			break;
+		case "-":
+			y=Double.parseDouble(te[++i]);
+			number.push(-y);
+			operator.push("+");
+			break;
+		case "*":
+			operator.push("*");
+			break;
+		case "v":
+			
+			popv=number.pop();
+			y=Math.pow(popv,0.5);
+			number.push(y);
+			
+		break;
+		case "^": 
+			   y=Double.parseDouble(te[++i]);
+			popv=number.pop();
+			y=Math.pow(popv, y);
+			number.push(y);
+			break;
+		case "%":
+			operator.push("%");
+			break;
+		default:
+			y=Double.parseDouble(te[i]);
+			    number.push(y);
+			break;
+		}
+	}
+	while(!operator.isEmpty())
+	{
+		String op=operator.pop();
+		double num1 =number.pop();;
+		double num2 = 0;
+	if(op=="*")
+	     {  
+		 num2=number.pop();
+            num1=num1*num2;
+			  number.push(num1);
+		}	
+		else if (op=="%") {
+			
+			operator.push("*");
+			if(num1!=0){
+			num1=1/num1;
+			number.push(num1);
+			}
+			else
+				textarea.setText("  ");
+			
+		}
+		else {
+			num.push(num1);
+			num.push(num2);
+			operat.push(op);
+		}
+	}
+	while(!num.isEmpty())
+	{
+		number.push(number.pop()+num.pop());
+	} 
+	
+		textarea.setText(" ");
+		textarea.setText(Double.toString(number.pop()));
+	}
+
+	private Object operation2(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Button btn= (Button)e.getSource();
+		switch (btn.getText()) {
+		case "%":
+			textarea.setText(textarea.getText()+" % ");
+			break;
+
+		case "^":
+			textarea.setText(textarea.getText()+" ^ ");
+			break;
+		case "-":
+			textarea.setText(textarea.getText()+" - ");
+			break;
+		}
+		return null;
+	}
+
+	private Object operation1(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Button btn= (Button)e.getSource();
+		switch (btn.getText()) {
+		case "*":
+			textarea.setText(textarea.getText()+" * ");
+			break;
+        case "+/-":
+			textarea.setText(textarea.getText()+"-");
+			break;
+		case "+":
+			textarea.setText(textarea.getText()+" + ");
+			break;
+		}
+		return null;
+	}
+	private Object operation3(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Button btn= (Button)e.getSource();
+		switch (btn.getText()) {
+		case "v":
+			textarea.setText(textarea.getText()+" v ");
+		   break;
+		case "0":
+			textarea.setText(textarea.getText()+"0");
+			break;
+
+		case ".":
+			textarea.setText(textarea.getText()+".");
+			break;
+		
+		case "=":
+			if(textarea.getText()==null)
+				textarea.setText("0");
+			else
+				try{
+			 result();
+				}
+			catch (Exception e2) {
+				textarea.setText("invalid Operation");
+			}
+			
+			break;
+		}
+		return null;
+	}
+	private Object number(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Button btn= (Button)e.getSource();
+		switch (btn.getText()) {
+		case "1":
+			textarea.setText(textarea.getText()+"1");
+			break;
+		case "2":
+			textarea.setText(textarea.getText()+"2");
+			break;
+		case "3":
+			textarea.setText(textarea.getText()+"3");
+			break;
+		case "4":
+			textarea.setText(textarea.getText()+"4");
+			break;
+		case "5":
+			textarea.setText(textarea.getText()+"5");
+			break;
+		case "6":
+			textarea.setText(textarea.getText()+"6");
+			break;
+		case "7":
+			textarea.setText(textarea.getText()+"7");
+			break;
+		case "8":
+			textarea.setText(textarea.getText()+"8");
+			break;
+		case "9":
+			textarea.setText(textarea.getText()+"9");
+			break;
+		
+		}
+		return null;
+	}
+
+}
